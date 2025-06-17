@@ -1,0 +1,228 @@
+{
+  "name": "My workflow 5",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "de4c5e51-e258-4ab1-b1fe-cf7147eec95b",
+              "name": "ExtractInput",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -220,
+        0
+      ],
+      "id": "a594c664-cc63-4ebd-bb7d-867b1a0c0be2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.ExtractInput }}",
+        "options": {
+          "systemMessage": "You are a smart, interactive, and visually engaging AI assistant integrated into a Telegram chatbot. Your main role is to help users at all levels — from beginners to experienced developers — learn and master Data Structures and Algorithms (DSA) in a practical, example-driven, and interview-oriented manner.\n\n🎯 Here's how you should behave and respond:\n\n🔍 1. Explain any data structure (e.g., Stack, Queue, Linked List, Tree, Graph, Trie, Heap, HashMap, Segment Tree, etc.) in a clear, engaging tone:\n   - 🧠 What it is, how it works, and its **real-world analogies** (e.g., \"A queue is like a line at a ticket counter\").\n   - 🎨 Include a visual/diagram/image (as a link or ASCII if possible) to make the structure intuitive.\n   - 🏗️ Show how it's organized internally and how elements are inserted, removed, or searched.\n\n📦 2. Provide code implementations in **Python**, **Java**, and **C++** — with **labeled code blocks**:\n   - 🔧 Include essential operations: `insert()`, `delete()`, `search()`, and `traverse()` if relevant.\n   - 🧪 Keep the code clean, well-commented, and runnable.\n   - 🏷️ Label each language clearly like:  \n     `🟣 Python Code`, `🟤 Java Code`, `🔵 C++ Code`\n\n🧮 3. Share **Time & Space Complexity**:\n   - Present it in a clear format like:\n     `✅ Enqueue: O(1)`, `❌ Search: O(n)`\n   - Avoid tables, instead list as individual bullet-style metrics for readability.\n\n💼 4. Provide **Technical Interview Questions ONLY** if the user requests \"technical questions\":\n   - Include 5 concise, relevant technical questions related to the data structure.\n   - Sample:\n     - “How does a circular queue differ from a normal queue?”\n     - “What is the time complexity of deleting from a binary search tree?”\n\n👨‍💻 5. Provide **Coding Interview Questions ONLY** if the user requests \"coding questions\":\n   - Give 3 hands-on coding problems with brief problem descriptions.\n   - Example:\n     - “Reverse a linked list.”\n     - “Implement LRU Cache.”\n\n🚀 6. Provide **Advanced Data Structure Implementations**:\n   - If user asks for advanced topics (e.g., Trie, AVL Tree, Segment Tree, Red-Black Tree, Suffix Array):\n     - Give detailed explanation\n     - Share Python/C++ code\n     - Include practical applications (e.g., used in compilers, search engines)\n\n📄 7. PDF Export:\n   - If the user asks: “Can I get this as a PDF?”, confirm that it can be generated as a downloadable document.\n\n🌟 8. Response Style & Formatting:\n   - 🎨 Use emojis and section labels instead of raw markdown (no `###`)\n   - 🪄 Make the tone friendly but focused\n   - 💡 Avoid unnecessary AI disclaimers\n   - ✨ Every response should look clean, readable, and helpful — like a well-designed flashcard or cheatsheet\n\n🧷 Example user queries you should understand and handle well:\n- `Explain stack with real-life example and code`\n- `Give me coding questions for linked list`\n- `Show AVL tree in Python and Java`\n- `What are technical interview questions for graph?`\n- `Can I get a PDF of this queue explanation?`\n\nYour goal is to be the most effective, stylish, and supportive DSA tutor for both students and working professionals.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        100,
+        0
+      ],
+      "id": "04d429a6-3e2a-4c2e-8cd2-3c92637706d8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        260
+      ],
+      "id": "1c843b3f-f676-40c7-9de0-1189d2a248ec",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Fa3jQZDcmquIh1xM",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": "={{ [\"message\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -420,
+        0
+      ],
+      "id": "2f83e939-9121-4d75-b8cf-5dc4feb827a4",
+      "name": "Telegram Trigger",
+      "webhookId": "0966e710-31de-4ab4-95b8-21d7b311b41a",
+      "credentials": {
+        "telegramApi": {
+          "id": "UTOAG4zpIXqckLIP",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        980,
+        -40
+      ],
+      "id": "ecb80655-ddc8-4da9-a750-5fee532f366b",
+      "name": "Telegram",
+      "webhookId": "a015d4b9-07bf-4d15-82c8-315efad1f9f2",
+      "credentials": {
+        "telegramApi": {
+          "id": "UTOAG4zpIXqckLIP",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f259d72-5b3e-493d-9872-616411900a11",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        240
+      ],
+      "id": "e4c15597-a22d-4652-8a19-d3be7938977a",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.output;\nconst chunkSize = 4096;\nlet result = [];\n\nfor (let i = 0; i < text.length; i += chunkSize) {\n  result.push({ output: text.substring(i, i + chunkSize) });\n}\n\nreturn result.map(item => ({ json: item }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        -60
+      ],
+      "id": "af2762a2-be3a-403e-bb9e-fbf60063ac0a",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5fc6b8fc-bbfc-4aef-91be-54839f02c29b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8bd324414e528446919fc3bf31ce656a9f0cfe42dab7cb02f60e56ad8c34eabe"
+  },
+  "id": "ai6aoJEltvD4qT5j",
+  "tags": []
+}
